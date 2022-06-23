@@ -14,12 +14,15 @@ internal sealed class PaymentMethodPreferenceJsonParser<StripeIntentType : Strip
 
     override fun parse(json: JSONObject): PaymentMethodPreference? {
         val paymentMethodPreference =
-            StripeJsonUtils.mapToJsonObject(StripeJsonUtils.optMap(json, OBJECT_TYPE))
+            StripeJsonUtils.mapToJsonObject(StripeJsonUtils.optMap(json, OBJECT_TYPE_PREFERENCE))
 
-        val objectType = StripeJsonUtils.optString(paymentMethodPreference, FIELD_OBJECT)
-        if (paymentMethodPreference == null || OBJECT_TYPE != objectType) {
+        var objectType = StripeJsonUtils.optString(paymentMethodPreference, FIELD_OBJECT)
+        if (paymentMethodPreference == null || OBJECT_TYPE_PREFERENCE != objectType) {
             return null
         }
+
+        val paymentMethodSpecs =
+            json.optJSONArray(FIELD_TYPE_PAYMENT_METHOD_SCHEMA)
 
         val orderedPaymentMethodTypes =
             paymentMethodPreference.optJSONArray(FIELD_ORDERED_PAYMENT_METHOD_TYPES)
@@ -43,7 +46,7 @@ internal sealed class PaymentMethodPreferenceJsonParser<StripeIntentType : Strip
             }?.let {
                 PaymentMethodPreference(
                     it,
-                    paymentMethodPreference.optString(FIELD_PAYMENT_METHOD_SCHEMA)// formUI string
+                    paymentMethodSpecs?.toString()// formUI string
                 )
             }
     }
@@ -51,14 +54,14 @@ internal sealed class PaymentMethodPreferenceJsonParser<StripeIntentType : Strip
     abstract fun parseStripeIntent(stripeIntentJson: JSONObject): StripeIntentType?
 
     protected companion object {
-        private const val OBJECT_TYPE = "payment_method_preference"
+        private const val OBJECT_TYPE_PREFERENCE = "payment_method_preference"
 
         private const val FIELD_OBJECT = "object"
         private const val FIELD_ORDERED_PAYMENT_METHOD_TYPES = "ordered_payment_method_types"
         private const val FIELD_PAYMENT_METHOD_TYPES = "payment_method_types"
         private const val FIELD_UNACTIVATED_PAYMENT_METHOD_TYPES =
             "unactivated_payment_method_types"
-        private const val FIELD_PAYMENT_METHOD_SCHEMA =
+        private const val FIELD_TYPE_PAYMENT_METHOD_SCHEMA =
             "payment_method_specs"
     }
 }
