@@ -21,14 +21,14 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         origin = ORIGIN
     )
 
-    fun sheetPresented() = requestFactory.createRequestR(
+    fun sheetPresented() = requestFactory.createRequest(
         EVENT_SHEET_PRESENTED,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId
         )
     )
 
-    fun sheetClosed(sessionResult: String) = requestFactory.createRequestR(
+    fun sheetClosed(sessionResult: String) = requestFactory.createRequest(
         eventName = EVENT_SHEET_CLOSED,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -48,7 +48,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         docFrontModelScore: Float? = null,
         docBackModelScore: Float? = null,
         selfieModelScore: Float? = null
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_VERIFICATION_SUCCEEDED,
         additionalParams =
         mapOf(
@@ -72,7 +72,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         lastScreenName: String? = null,
         scanType: IdentityScanState.ScanType? = null,
         requireSelfie: Boolean? = null
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_VERIFICATION_CANCELED,
         additionalParams =
         mapOf(
@@ -91,7 +91,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         docFrontUploadType: DocumentUploadParam.UploadMethod? = null,
         docBackUploadType: DocumentUploadParam.UploadMethod? = null,
         throwable: Throwable
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_VERIFICATION_FAILED,
         additionalParams =
         mapOf(
@@ -111,7 +111,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
     fun screenPresented(
         scanType: IdentityScanState.ScanType? = null,
         screenName: String
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_SCREEN_PRESENTED,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -123,7 +123,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
     fun cameraError(
         scanType: IdentityScanState.ScanType,
         throwable: Throwable
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_CAMERA_ERROR,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -137,7 +137,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
 
     fun cameraPermissionDenied(
         scanType: IdentityScanState.ScanType
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_CAMERA_PERMISSION_DENIED,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -147,7 +147,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
 
     fun cameraPermissionGranted(
         scanType: IdentityScanState.ScanType
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_CAMERA_PERMISSION_GRANTED,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -157,7 +157,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
 
     fun documentTimeout(
         scanType: IdentityScanState.ScanType
-    ) = requestFactory.createRequestR(
+    ) = requestFactory.createRequest(
         eventName = EVENT_DOCUMENT_TIMEOUT,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId,
@@ -166,10 +166,28 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         )
     )
 
-    fun selfieTimeout() = requestFactory.createRequestR(
+    fun selfieTimeout() = requestFactory.createRequest(
         eventName = EVENT_SELFIE_TIMEOUT,
         additionalParams = mapOf(
             PARAM_VERIFICATION_SESSION to args.verificationSessionId
+        )
+    )
+
+    fun averageFps(type: String, value: Int) = requestFactory.createRequest(
+        eventName = EVENT_AVERAGE_FPS,
+        additionalParams = mapOf(
+            PARAM_TYPE to type,
+            PARAM_VALUE to value
+        )
+    )
+
+    fun modelPerformance(mlModel: String, preprocess: Long, inference: Long, frames: Int) = requestFactory.createRequest(
+        eventName = EVENT_MODEL_PERFORMANCE,
+        additionalParams = mapOf(
+            PARAM_PREPROCESS to preprocess,
+            PARAM_INFERENCE to inference,
+            PARAM_ML_MODEL to mlModel,
+            PARAM_FRAMES to frames
         )
     )
 
@@ -217,6 +235,8 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         const val EVENT_CAMERA_PERMISSION_GRANTED = "camera_permission_granted"
         const val EVENT_DOCUMENT_TIMEOUT = "document_timeout"
         const val EVENT_SELFIE_TIMEOUT = "selfie_timeout"
+        const val EVENT_AVERAGE_FPS = "average_fps"
+        const val EVENT_MODEL_PERFORMANCE = "model_performance"
 
         const val PARAM_FROM_FALLBACK_URL = "from_fallback_url"
         const val PARAM_VERIFICATION_SESSION = "verification_session"
@@ -237,6 +257,12 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         const val PARAM_STACKTRACE = "stacktrace"
         const val PARAM_SCREEN_NAME = "screen_name"
         const val PARAM_SIDE = "side"
+        const val PARAM_TYPE = "type"
+        const val PARAM_VALUE = "value"
+        const val PARAM_PREPROCESS = "preprocess"
+        const val PARAM_INFERENCE = "inference"
+        const val PARAM_ML_MODEL = "ml_model"
+        const val PARAM_FRAMES = "frames"
 
         const val SCREEN_NAME_CONSENT = "consent"
         const val SCREEN_NAME_DOC_SELECT = "document_select"
@@ -245,5 +271,7 @@ internal class IdentityAnalyticsRequestFactory @Inject constructor(
         const val SCREEN_NAME_SELFIE = "selfie"
         const val SCREEN_NAME_CONFIRMATION = "confirmation"
         const val SCREEN_NAME_ERROR = "error"
+        const val TYPE_SELFIE = "selfie"
+        const val TYPE_DOCUMENT = "document"
     }
 }
