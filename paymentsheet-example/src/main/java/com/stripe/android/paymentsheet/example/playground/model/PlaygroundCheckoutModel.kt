@@ -46,7 +46,7 @@ data class CheckoutRequest(
     val use_link: Boolean,
     val merchant_country_code: String? = when (currency.uppercase()) {
         "AUD" -> "AU"
-        "EUR" -> "GB"
+        "EUR" -> "FR"
         else -> null
     }
 )

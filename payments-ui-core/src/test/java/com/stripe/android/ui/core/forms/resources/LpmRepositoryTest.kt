@@ -54,6 +54,33 @@ class LpmRepositoryTest {
     }
 
     @Test
+    fun `Verify latest server spec`() {
+        lpmRepository.update(
+            listOf("bancontact", "sofort", "ideal", "sepa_debit", "p24", "eps", "giropay"),
+            """
+                [
+                  {
+                    "type": "an lpm",
+                    "async": false,
+                    "fields": [
+                      {
+                        "api_path": null,
+                        "type": "afterpay_header"
+                      }
+                    ]
+                  }
+                ]
+            """.trimIndent()
+        )
+        assertThat(lpmRepository.fromCode("sofort")).isNotNull()
+        assertThat(lpmRepository.fromCode("ideal")).isNotNull()
+        assertThat(lpmRepository.fromCode("bancontact")).isNotNull()
+        assertThat(lpmRepository.fromCode("p24")).isNotNull()
+        assertThat(lpmRepository.fromCode("eps")).isNotNull()
+        assertThat(lpmRepository.fromCode("giropay")).isNotNull()
+    }
+
+    @Test
     fun `Repository will contain LPMs in ordered and schema`() {
         lpmRepository.update(
             listOf("afterpay_clearpay"),
