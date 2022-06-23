@@ -8,6 +8,7 @@ internal class LpmSerializer {
     private val format = Json {
         ignoreUnknownKeys = true
         classDiscriminator = "#class"
+        coerceInputValues = true
     }
 
     fun serialize(data: SharedDataSpec) =
