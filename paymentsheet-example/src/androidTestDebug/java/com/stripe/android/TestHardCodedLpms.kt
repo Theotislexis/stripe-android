@@ -79,6 +79,7 @@ class TestHardCodedLpms {
     fun testCard() {
         testDriver.confirmNewOrGuestComplete(
             newUser.copy(
+                customer = Customer.New,
                 billing = Billing.On,
                 paymentMethod = LpmRepository.HardcodedCard,
                 authorizationAction = null,
@@ -204,6 +205,7 @@ class TestHardCodedLpms {
                 shipping = Shipping.On,
                 delayed = DelayedPMs.On,
                 automatic = Automatic.Off,
+                merchantCountryCode = "AU"
             )
         )
     }
