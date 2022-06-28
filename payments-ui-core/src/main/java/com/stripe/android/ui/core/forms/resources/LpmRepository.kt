@@ -110,6 +110,7 @@ class LpmRepository @Inject constructor(
         val parsedSupportedPaymentMethod = lpms
             ?.filter { exposedPaymentMethods.contains(it.type) }
             ?.mapNotNull { convertToSupportedPaymentMethod(it) }
+        // TODO make sure connected bank sdk is loaded before showing that lpm
 
         codeToSupportedPaymentMethod.putAll(
             parsedSupportedPaymentMethod?.associateBy { it.code } ?: emptyMap()
